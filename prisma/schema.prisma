@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Boutique {
+  id           Int      @id @default(autoincrement())
+  nom          String
+  sousDomaine  String   @unique
+  activite     String
+  dateCreation DateTime @default(now())
+
+  // Relation avec l'Utilisateur (Propriétaire)
+  // On utilise un seul champ 'proprietaireId' pour éviter les doublons
+  proprietaire   Utilisateur @relation("ProprietaireBoutique", fields: [proprietaireId], references: [id])
+  proprietaireId Int         @unique
+
+  // Relations inverses
+  commandes Commande[]
+  paiements Paiement[]
+  produits  Produit[]
+
+  @@map("boutiques")
+}
+
+model Utilisateur {
+  id                Int       @id @default(autoincrement())
+  nom_complet       String
+  email             String    @unique
+  mot_de_passe      String
+  role              String    @default("acheteur") // acheteur, vendeur, admin
+  resetToken        String?   @unique
+  resetTokenExpiry  DateTime?
+  
+  // Relations
+  commandes  Commande[]
+  maBoutique Boutique?  @relation("ProprietaireBoutique")
+
+  @@map("utilisateurs")
+}
+
+model Produit {
+  id           Int      @id @default(autoincrement())
+  nom          String
+  description  String?  @db.Text
+  prix         Decimal  @db.Decimal(10, 2)
+  stock        Int      @default(0)
+  image_url    String?
+  dateCreation DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relation avec la boutique
+  boutiqueId Int
+  boutique   Boutique @relation(fields: [boutiqueId], references: [id], onDelete: Cascade)
+
+  @@index([boutiqueId])
+  @@map("produits")
+}
+
+model Commande {
+  id              Int      @id @default(autoincrement())
+  totalPrix       Decimal  @db.Decimal(10, 2)
+  fraisPlateforme Decimal  @db.Decimal(10, 2)
+  statutCommande  String   @default("en_attente") // en_attente, paye, expedie, livre
+  dateCommande    DateTime @default(now())
+
+  // Infos client pour la livraison
+  nomClient String
+  telephone String
+  adresse   String @db.Text
+
+  // Snapshot des articles (ex: [{id, nom, prix, quantite}])
+  items Json
+
+  // Relations
+  boutiqueId    Int
+  utilisateurId Int? // Optionnel pour les achats "invités"
+  
+  boutique    Boutique     @relation(fields: [boutiqueId], references: [id])
+  utilisateur Utilisateur? @relation(fields: [utilisateurId], references: [id])
+  paiements   Paiement[]
+
+  @@index([boutiqueId])
+  @@index([utilisateurId])
+  @@map("commandes")
+}
+
+model Paiement {
+  id              Int      @id @default(autoincrement())
+  methodePaiement String   // moncash, natcash, carte_credit
+  statutPaiement  String   @default("en_attente") // en_attente, reussi, echoue
+  montant         Decimal  @db.Decimal(10, 2)
+  transactionId   String?  @unique
+  datePaiement    DateTime @default(now())
+
+  // Relations
+  commandeId Int
+  boutiqueId Int
+
+  boutique Boutique @relation(fields: [boutiqueId], references: [id])
+  commande Commande @relation(fields: [commandeId], references: [id], onDelete: Cascade)
+
+  @@index([boutiqueId])
+  @@index([commandeId])
+  @@map("paiements")
+}

@@ -1,0 +1,31 @@
+
+@import "tailwindcss";
+@layer base {
+  html {
+    /* Rend les transitions fluides entre les sections */
+    scroll-behavior: smooth;
+  }
+
+  [id] {
+    /* Évite que la navbar fixe ne cache le titre de la section */
+    scroll-margin-top: 100px;
+  }
+}
+
+/* Optionnel : Une barre de défilement plus fine et stylée pour OPERIX */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #020617;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3b82f6;
+}
