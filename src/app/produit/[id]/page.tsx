@@ -15,12 +15,15 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
 
   if (!produit) notFound();
 
-  // --- CORRECTION SERIALIZATION ---
-  // On transforme l'objet produit pour convertir le Decimal en Number
-  // afin que le Client Component (AddToCartBtn) puisse le lire
+ 
   const produitPourClient = {
     ...produit,
-    prix: Number(produit.prix)
+    prix: Number(produit.prix),
+    boutique: {
+      ...produit.boutique,
+      
+      solde: Number(produit.boutique.solde), 
+    }
   };
 
   return (
@@ -34,17 +37,19 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
       </nav>
 
       <main className="max-w-6xl mx-auto py-20 px-6 grid grid-cols-1 md:grid-cols-2 gap-16">
-        {/* Colonne Image */}
+        
         <div className="relative h-[500px] rounded-[3rem] overflow-hidden border border-white/10 bg-white/5">
           <Image 
+          
             src={produit.image_url || "https://placehold.co/600x800"} 
             alt={produit.nom} 
             fill 
             className="object-cover" 
+            priority
           />
         </div>
 
-        {/* Colonne Infos */}
+        
         <div className="flex flex-col justify-center">
           <div className="text-blue-500 font-black uppercase tracking-[0.3em] text-xs mb-4">Produit Officiel</div>
           <h1 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter mb-6 leading-none">
@@ -67,7 +72,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
           </div>
 
           <div className="h-20 w-full md:w-80">
-            {/* ON PASSE produitPourClient ICI */}
+           
             <AddToCartBtn produit={produitPourClient} />
           </div>
         </div>

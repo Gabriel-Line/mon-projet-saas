@@ -33,6 +33,6 @@ export async function generateMonCashPayment(orderId: number, amount: number) {
   });
 
   const paymentData = await res.json();
-  // Retourne l'URL de redirection Digicel
+  
   return `${MONCASH_URL}/v1/checkout?token=${paymentData.payment_token.token}`;
 }

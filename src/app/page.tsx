@@ -8,7 +8,6 @@ export default async function HomePage() {
   const cookieStore = await cookies();
   const userId = cookieStore.get("userId")?.value;
 
-  // 1. On récupère l'utilisateur et sa boutique pour décider des liens
   let user = null;
   if (userId) {
     user = await prisma.utilisateur.findUnique({
@@ -25,7 +24,7 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-[#020617] text-gray-100 overflow-x-hidden font-sans">
 
-      {/* ================= NAVBAR ================= */}
+      
       <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#020617]/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="text-2xl font-black tracking-tighter italic uppercase">
@@ -35,8 +34,6 @@ export default async function HomePage() {
           <div className="flex items-center gap-6">
             <div className="hidden md:flex gap-8 text-[10px] font-black tracking-[0.2em] text-gray-400">
               <Link href="/" className="hover:text-white transition">ACCUEIL</Link>
-              
-              {/* MODIFICATION ICI : Dirige vers la page marché */}
               <Link href="/marche" className="hover:text-white transition">BOUTIQUES</Link>
             </div>
 
@@ -64,7 +61,7 @@ export default async function HomePage() {
         </div>
       </nav>
 
-      {/* ================= HERO ================= */}
+      
       <section className="relative min-h-screen flex items-center justify-center text-center px-6">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/10 blur-[120px] rounded-full"></div>
@@ -100,7 +97,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ================= BOUTIQUES SECTION ================= */}
+      
       <main id="boutiques" className="max-w-7xl mx-auto py-32 px-6">
         <div className="flex flex-col mb-16">
             <h2 className="text-3xl font-black uppercase tracking-widest">
@@ -118,7 +115,8 @@ export default async function HomePage() {
             shops.map((shop) => (
               <Link
                 key={shop.id}
-                href={`/${shop.sousDomaine}`} 
+                
+                href={userId ? `/${shop.sousDomaine}` : "/login"} 
                 className="group"
               >
                 <div className="bg-white/3 border border-white/5 p-10 rounded-[2.5rem] hover:border-blue-500/40 hover:-translate-y-3 transition-all duration-500">
@@ -132,7 +130,7 @@ export default async function HomePage() {
                   </p>
 
                   <div className="text-[10px] font-black uppercase tracking-widest text-gray-500 group-hover:text-white transition-colors">
-                    Visiter la boutique → 
+                    {userId ? "Visiter la boutique →" : "Se connecter pour visiter →"}
                   </div>
                 </div>
               </Link>
@@ -141,7 +139,7 @@ export default async function HomePage() {
         </div>
       </main>
 
-      {/* ================= FOOTER ================= */}
+      
       <footer className="py-20 border-t border-white/5 bg-black/20 text-center">
         <div className="text-xl font-black mb-6 italic uppercase">
           OPER<span className="text-blue-500">IX</span>

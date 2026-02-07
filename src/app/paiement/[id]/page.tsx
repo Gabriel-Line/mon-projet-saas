@@ -39,7 +39,7 @@ export default async function PagePaiement({
         }
     }[method as string] || { nom: "Paiement", color: "bg-gray-800", icon: <Lock /> };
 
-    // Cette fonction encapsulée règle l'erreur TypeScript 2322
+    
     const handleFormAction = async () => {
         "use server";
         await confirmerLePaiementAction(commande.id, method);
@@ -82,7 +82,7 @@ export default async function PagePaiement({
                          </div>
                     </div>
 
-                    {/* Formulaire utilisant l'action corrigée */}
+                    
                     <form action={handleFormAction}>
                         <button 
                             type="submit"

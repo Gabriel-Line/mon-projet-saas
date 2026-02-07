@@ -9,18 +9,18 @@ export default async function RegisterPage({
 }) {
     const resolvedParams = await searchParams;
     const hasError = resolvedParams?.error === "true";
-    const intent = resolvedParams?.intent || "acheter"; // Capture l'intention (vendre ou acheter)
+    const intent = resolvedParams?.intent || "acheter"; 
 
     return (
         <div className="min-h-screen bg-[#020617] flex items-center justify-center p-6 relative overflow-hidden text-gray-100">
-            {/* Effets de lumière en fond */}
+            
             <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-600/10 blur-[120px] rounded-full"></div>
             <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/10 blur-[120px] rounded-full"></div>
 
             <div className="relative z-10 w-full max-w-md">
                 <div className="bg-gray-900/40 backdrop-blur-3xl p-10 rounded-[2.5rem] border border-gray-800 shadow-2xl">
                     
-                    {/* Header */}
+                    
                     <div className="text-center mb-10">
                         <div className="text-2xl font-black tracking-tighter uppercase mb-2 text-white italic">
                             OPER<span className="text-blue-500">IX</span>
@@ -38,10 +38,10 @@ export default async function RegisterPage({
 
                     <form action={registerAction} className="space-y-5" autoComplete="off">
                         
-                        {/* CHAMP CACHÉ : Transmet l'intention au serveur sans que l'utilisateur ne le voie */}
+                        
                         <input type="hidden" name="intent" value={intent} />
 
-                        {/* 1. Nom complet */}
+                        
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] ml-1">Nom complet</label>
                             <input 
@@ -53,7 +53,7 @@ export default async function RegisterPage({
                             />
                         </div>
 
-                        {/* 2. Adresse Email */}
+                        
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] ml-1">Adresse Email</label>
                             <input 
@@ -64,7 +64,7 @@ export default async function RegisterPage({
                                 placeholder="votre@email.com" 
                             />
                         </div>
-                        {/* 3. Mot de passe */}
+                        
                         <div className="space-y-2">
                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] ml-1">Mot de passe</label>
                             <input 
@@ -76,7 +76,7 @@ export default async function RegisterPage({
                             />
                         </div>
 
-                        {/* 4. Confirmation du Mot de passe */}
+                        
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] ml-1">Confirmation</label>
                             <input 

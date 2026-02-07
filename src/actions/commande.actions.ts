@@ -11,11 +11,26 @@ export async function supprimerCommandeAction(id: number) {
     });
   } catch (error) {
     console.error("Erreur lors de la suppression :", error);
-    // On ne retourne pas d'objet d'erreur pour satisfaire TypeScript
     return;
   }
 
-  // On rafraîchit la liste et on redirige
   revalidatePath("/dashboard/commandes");
   redirect("/dashboard/commandes");
+}
+
+export async function marquerCommeLivreeAction(id: number) {
+  try {
+    await prisma.commande.update({
+      where: { id: id },
+      data: {
+        statutCommande: "livree", 
+      },
+    });
+
+    revalidatePath(`/dashboard/commandes/${id}`);
+    revalidatePath("/dashboard/commandes");
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour :", error);
+    return;
+  }
 }

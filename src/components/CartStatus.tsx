@@ -10,7 +10,7 @@ export default function CartStatus() {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  // Empêche l'erreur d'hydratation en attendant que le client soit prêt
+  
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -23,7 +23,7 @@ export default function CartStatus() {
     );
   }
 
-  // Calcul du nombre total d'articles (somme des quantités)
+ 
   const count = items.reduce((acc: number, item: any) => acc + item.quantite, 0);
 
   return (
@@ -41,7 +41,7 @@ export default function CartStatus() {
         )}
       </button>
 
-      {/* Le menu latéral qui s'ouvre au clic */}
+      
       <CartDrawer isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );

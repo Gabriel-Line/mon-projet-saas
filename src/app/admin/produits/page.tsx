@@ -38,7 +38,7 @@ export default async function ListeProduitsPage({
         <div className="min-h-screen bg-[#020617] text-white p-8">
             <div className="max-w-6xl mx-auto">
                 
-                {/* Notification de succès */}
+                
                 {isSuccess && (
                     <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 rounded-2xl flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-500">
                         <CheckCircle2 size={18} className="text-green-500" />
@@ -48,7 +48,7 @@ export default async function ListeProduitsPage({
                     </div>
                 )}
 
-                {/* Header */}
+                
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
                     <div>
                         <Link href="/admin" className="flex items-center gap-2 text-gray-500 hover:text-white transition-colors mb-4 text-[10px] font-black uppercase tracking-widest">
@@ -67,7 +67,7 @@ export default async function ListeProduitsPage({
                     </Link>
                 </div>
 
-                {/* Table - Suppression du overflow-hidden pour voir le menu */}
+                
                 <div className="relative bg-gray-900/40 border border-gray-800 rounded-[2.5rem] backdrop-blur-3xl shadow-2xl">
                     <table className="w-full text-left border-collapse">
                         <thead>

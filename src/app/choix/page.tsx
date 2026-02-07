@@ -6,13 +6,13 @@ export default function ChoicePage() {
     return (
         <div className="min-h-screen bg-[#020617] flex items-center justify-center p-6 relative overflow-hidden">
             
-            {/* Effets de lumière décoratifs (Glow) */}
+            
             <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/10 blur-[120px] rounded-full"></div>
             <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 blur-[120px] rounded-full"></div>
             
             <div className="relative z-10 w-full max-w-2xl">
                 
-                {/* Header de la page */}
+                
                 <div className="text-center mb-16">
                     <h1 className="text-6xl md:text-7xl font-black tracking-tighter italic uppercase mb-2">
                         <span
@@ -25,10 +25,10 @@ export default function ChoicePage() {
                    
                 </div>
 
-                {/* Grille de choix */}
+                
                 <div className="grid md:grid-cols-2 gap-6">
                     
-                    {/* OPTION 1 : DÉJÀ UN COMPTE */}
+                    
                     <Link 
                         href="/login?intent=vendre" 
                         className="group relative p-8 bg-gray-900/40 backdrop-blur-3xl border border-gray-800 rounded-[2.5rem] hover:border-blue-500/50 transition-all duration-500"
@@ -45,7 +45,7 @@ export default function ChoicePage() {
                         </div>
                     </Link>
 
-                    {/* OPTION 2 : NOUVEAU COMPTE */}
+                   
                     <Link 
                         href="/register?intent=vendre" 
                         className="group relative p-8 bg-gray-900/40 backdrop-blur-3xl border border-gray-800 rounded-[2.5rem] hover:border-purple-500/50 transition-all duration-500"
@@ -62,7 +62,7 @@ export default function ChoicePage() {
                         </div>
                     </Link>
                 </div>
-                {/* Bouton Retour */}
+                
                 <div className="mt-12 text-center">
                     <Link 
                         href="/" 

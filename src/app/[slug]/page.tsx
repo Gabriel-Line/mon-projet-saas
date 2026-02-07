@@ -10,10 +10,9 @@ export default async function BoutiquePage({
 }: { 
   params: Promise<{ slug: string }> 
 }) {
-  // 1. On attend la résolution des paramètres (Obligatoire en Next.js 15)
+  
   const { slug } = await params;
 
-  // 2. Récupération de la boutique
   const boutique = await prisma.boutique.findUnique({
     where: { sousDomaine: slug },
     include: { produits: true },
@@ -23,14 +22,13 @@ export default async function BoutiquePage({
     notFound();
   }
 
-  // 3. Logique pour l'accord du pluriel
   const nbProduits = boutique.produits.length;
   const texteArticles = nbProduits <= 1 ? "article disponible" : "articles disponibles";
 
   return (
     <div className="min-h-screen bg-[#020617] text-white selection:bg-blue-500/30">
       
-      {/* ================= NAVBAR ================= */}
+      
       <nav className="border-b border-white/5 bg-[#020617]/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <Link href="/" className="text-gray-400 hover:text-white transition flex items-center gap-2 text-[10px] font-black uppercase tracking-widest">
@@ -42,7 +40,7 @@ export default async function BoutiquePage({
         </div>
       </nav>
 
-      {/* ================= HERO SECTION ================= */}
+      
       <header className="relative py-24 px-6 overflow-hidden border-b border-white/5">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-blue-600/5 blur-[120px] rounded-full"></div>
         
@@ -62,7 +60,7 @@ export default async function BoutiquePage({
         </div>
       </header>
 
-      {/* ================= CATALOGUE ================= */}
+      
       <main className="max-w-7xl mx-auto py-20 px-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div>
@@ -90,8 +88,7 @@ export default async function BoutiquePage({
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {boutique.produits.map((produit) => {
-              // --- CORRECTION SERIALIZATION ---
-              // On convertit le prix (Decimal) en Number pour le bouton Client
+              
               const produitPourClient = {
                 ...produit,
                 prix: Number(produit.prix)
@@ -105,7 +102,7 @@ export default async function BoutiquePage({
                 >
                   <div className="bg-white/3 border border-white/5 rounded-[2.5rem] overflow-hidden hover:border-blue-500/40 hover:-translate-y-2 transition-all duration-500 flex flex-col h-full">
                     
-                    {/* Image du produit */}
+                    
                     <div className="relative h-64 w-full bg-gray-900 overflow-hidden">
                       <Image
                         src={produit.image_url || "https://placehold.co/600x400/020617/white?text=Produit"}
@@ -119,7 +116,7 @@ export default async function BoutiquePage({
                       </div>
                     </div>
 
-                    {/* Détails du produit */}
+                    
                     <div className="p-8 flex flex-col flex-1">
                       <h3 className="text-xl font-black uppercase italic tracking-tighter text-white mb-2 truncate">
                         {produit.nom}
@@ -137,7 +134,7 @@ export default async function BoutiquePage({
                           </p>
                         </div>
 
-                        {/* On passe produitPourClient qui contient le prix converti en nombre */}
+                        
                         <div className="h-14 w-14">
                             <AddToCartBtn produit={produitPourClient} />
                         </div>
@@ -151,7 +148,7 @@ export default async function BoutiquePage({
         )}
       </main>
 
-      {/* ================= FOOTER ================= */}
+      
       <footer className="py-20 border-t border-white/5 text-center bg-black/20">
           <div className="text-lg font-black italic uppercase mb-4">
             OPER<span className="text-blue-500">IX</span>

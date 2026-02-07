@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { MoreVertical, Edit3, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { deleteProduit } from "./actions"; // Import de l'action
+import { deleteProduit } from "./actions"; 
 
 export default function ActionsBouton({ produitId }: { produitId: number }) {
     const [isOpen, setIsOpen] = useState(false);

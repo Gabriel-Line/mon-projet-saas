@@ -1,16 +1,33 @@
 "use client";
 
+import { useState, useEffect } from "react"; // Ajouté ici
 import { addProductAction } from "@/actions/product.actions";
 import Link from "next/link";
 import { ArrowLeft, Package, Save } from "lucide-react";
 
 export default function NouveauProduitPage() {
-  
+  // Ajout de l'état pour stocker l'ID
+  const [boutiqueId, setBoutiqueId] = useState("");
+
+  // Ajout du useEffect pour récupérer l'ID dynamiquement
+  useEffect(() => {
+    const fetchBoutique = async () => {
+      try {
+        const response = await fetch("/api/user/boutique");
+        const data = await response.json();
+        if (data.boutiqueId) {
+          setBoutiqueId(data.boutiqueId.toString());
+        }
+      } catch (error) {
+        console.error("Erreur:", error);
+      }
+    };
+    fetchBoutique();
+  }, []);
+
   async function handleAction(formData: FormData) {
-    // Appel de l'action serveur
     const result = await addProductAction(formData);
     
-    // Correction de l'erreur TypeScript "Property error does not exist"
     if (result && result.error) {
         alert(result.error);
     }
@@ -35,8 +52,9 @@ export default function NouveauProduitPage() {
           </div>
 
           <form action={handleAction} className="space-y-6">
-            {/* Champ invisible pour lier à la boutique ID 1 par défaut */}
-            <input type="hidden" name="boutiqueId" value="1" />
+            
+            {/* CHANGEMENT : value={boutiqueId} au lieu de "1" */}
+            <input type="hidden" name="boutiqueId" value={boutiqueId} />
 
             <div className="space-y-2">
               <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] ml-1">Nom de l'article</label>

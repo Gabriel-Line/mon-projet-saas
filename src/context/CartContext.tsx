@@ -24,13 +24,13 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  // Charger le panier au démarrage
+  
   useEffect(() => {
     const savedCart = localStorage.getItem('operix_cart');
     if (savedCart) setCart(JSON.parse(savedCart));
   }, []);
 
-  // Sauvegarder à chaque modification
+  
   useEffect(() => {
     localStorage.setItem('operix_cart', JSON.stringify(cart));
   }, [cart]);

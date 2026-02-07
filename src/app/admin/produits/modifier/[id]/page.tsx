@@ -35,7 +35,7 @@ export default async function ModifierProduitPage({
                 <div className="bg-gray-900/40 border border-gray-800 p-8 md:p-12 rounded-[2.5rem] backdrop-blur-3xl shadow-2xl">
                     <form action={updateProduit} className="space-y-8">
                         
-                        {/* Champ ID indispensable pour Prisma */}
+                        
                         <input type="hidden" name="id" value={produit.id} />
 
                         <div className="space-y-3">

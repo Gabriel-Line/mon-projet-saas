@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `boutiques` ADD COLUMN `solde` DECIMAL(10, 2) NOT NULL DEFAULT 0.00;

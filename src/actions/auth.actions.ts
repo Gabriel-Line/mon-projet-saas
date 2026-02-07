@@ -5,23 +5,20 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import crypto from "crypto";
 
-/**
- * ACTION D'INSCRIPTION (REGISTER)
- */
+
 export async function registerAction(formData: FormData): Promise<void> {
     const nom_complet = formData.get("nom_complet") as string;
     const email = formData.get("email") as string;
     const mot_de_passe = formData.get("mot_de_passe") as string;
     const confirm_password = formData.get("confirm_password") as string;
-    const intent = formData.get("intent") as string; // "vendre" ou "acheter"
+    const intent = formData.get("intent") as string; 
 
-    // 1. Validation de sécurité de base
+    
     if (mot_de_passe !== confirm_password) {
         redirect("/register?error=password_mismatch");
     }
 
     try {
-        // 2. Création de l'utilisateur
         const user = await prisma.utilisateur.create({
             data: { 
                 nom_complet, 
@@ -31,7 +28,6 @@ export async function registerAction(formData: FormData): Promise<void> {
             }
         });
 
-        // 3. Initialisation de la session (Cookie)
         const cookieStore = await cookies();
         cookieStore.set("userId", user.id.toString(), {
             httpOnly: true,
@@ -44,7 +40,6 @@ export async function registerAction(formData: FormData): Promise<void> {
         redirect("/register?error=true");
     }
 
-    // 4. Redirection basée sur l'intention
     if (intent === "vendre") {
         redirect("/admin/setup"); 
     } else {
@@ -52,9 +47,7 @@ export async function registerAction(formData: FormData): Promise<void> {
     }
 }
 
-/**
- * ACTION DE CONNEXION (LOGIN)
- */
+
 export async function loginAction(formData: FormData): Promise<void> {
     const email = formData.get("email") as string;
     const mot_de_passe = formData.get("mot_de_passe") as string;
@@ -85,10 +78,6 @@ export async function loginAction(formData: FormData): Promise<void> {
     }
 }
 
-/**
- * ACTION MOT DE PASSE OUBLIÉ (FORGOT PASSWORD)
- * Génère un jeton temporaire pour la récupération
- */
 export async function resetPasswordAction(formData: FormData) {
     const email = formData.get("email") as string;
 
@@ -101,17 +90,15 @@ export async function resetPasswordAction(formData: FormData) {
             where: { email },
         });
 
-        // Sécurité : On ne confirme pas si l'email existe ou pas (anti-tracking)
         if (!user) {
             await new Promise((resolve) => setTimeout(resolve, 1000));
             return { success: true };
         }
 
-        // Génération d'un token sécurisé (64 caractères) et expiration (1 heure)
         const token = crypto.randomBytes(32).toString("hex");
         const expiry = new Date(Date.now() + 3600000); 
 
-        // Mise à jour de l'utilisateur avec le jeton
+    
         await prisma.utilisateur.update({
             where: { email },
             data: {
@@ -120,7 +107,7 @@ export async function resetPasswordAction(formData: FormData) {
             },
         });
 
-        // --- SIMULATION D'ENVOI D'EMAIL ---
+       
         console.log("------------------------------------------");
         console.log(`📩 EMAIL DE RÉCUPÉRATION POUR : ${email}`);
         console.log(`🔗 LIEN : http://localhost:3000/reset-password?token=${token}`);
@@ -133,10 +120,7 @@ export async function resetPasswordAction(formData: FormData) {
     }
 }
 
-/**
- * ACTION DE RÉINITIALISATION RÉELLE (UPDATE PASSWORD)
- * Vérifie le token et change le mot de passe final
- */
+
 export async function updatePasswordAction(formData: FormData) {
     const token = formData.get("token") as string;
     const nouveau_mdp = formData.get("nouveau_mdp") as string;
@@ -147,11 +131,11 @@ export async function updatePasswordAction(formData: FormData) {
     }
 
     try {
-        // 1. Trouver l'utilisateur avec ce token ET vérifier qu'il n'est pas expiré
+        
         const user = await prisma.utilisateur.findFirst({
             where: {
                 resetToken: token,
-                resetTokenExpiry: { gt: new Date() } // Doit être plus grand que "maintenant"
+                resetTokenExpiry: { gt: new Date() } 
             }
         });
 
@@ -159,7 +143,6 @@ export async function updatePasswordAction(formData: FormData) {
             return { error: "Le lien est invalide ou a expiré." };
         }
 
-        // 2. Mettre à jour le mot de passe et nettoyer les champs de reset
         await prisma.utilisateur.update({
             where: { id: user.id },
             data: {
@@ -176,9 +159,7 @@ export async function updatePasswordAction(formData: FormData) {
     }
 }
 
-/**
- * ACTION DE DÉCONNEXION
- */
+
 export async function logoutAction(): Promise<void> {
     const cookieStore = await cookies();
     cookieStore.delete("userId");

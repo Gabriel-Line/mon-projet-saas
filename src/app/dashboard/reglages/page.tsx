@@ -7,25 +7,21 @@ export default async function ReglagesPage() {
   const cookieStore = await cookies();
   const userId = cookieStore.get("userId")?.value;
 
-  // 1. Protection de la route
-  if (!userId) {
-    redirect("/login");
-  }
+  
+  if (!userId) redirect("/login");
 
   const parsedId = parseInt(userId);
-  if (isNaN(parsedId)) {
-    redirect("/login");
-  }
+  if (isNaN(parsedId)) redirect("/login");
 
-  // 2. Récupération des données
-  const boutique = await prisma.boutique.findFirst({
-    where: { utilisateurId: parsedId },
+  
+  const boutiqueRaw = await prisma.boutique.findFirst({
+    where: { proprietaireId: parsedId },
   });
 
-  // 3. Cas où l'utilisateur n'a pas encore créé de boutique
-  if (!boutique) {
+  
+  if (!boutiqueRaw) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center">
+      <div className="min-h-[60vh] flex items-center justify-center bg-[#020617]">
         <div className="text-center p-12 border border-dashed border-white/10 rounded-[3rem] bg-white/2 backdrop-blur-sm max-w-md">
           <div className="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <Store className="text-blue-500" size={30} />
@@ -34,7 +30,7 @@ export default async function ReglagesPage() {
           <p className="text-gray-500 text-xs font-bold uppercase tracking-widest leading-relaxed mb-8">
             Vous devez créer une boutique avant de pouvoir accéder aux réglages.
           </p>
-          <a href="/admin/setup" className="inline-block bg-white text-black px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px]">
+          <a href="/admin/setup" className="inline-block bg-white text-black px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:scale-105 transition-transform">
             Créer ma boutique
           </a>
         </div>
@@ -42,9 +38,12 @@ export default async function ReglagesPage() {
     );
   }
 
+  
+  const boutique = JSON.parse(JSON.stringify(boutiqueRaw));
+
   return (
-    <div className="max-w-5xl mx-auto">
-      {/* HEADER PAGE */}
+    <div className="max-w-5xl mx-auto p-4 md:p-8">
+      
       <div className="mb-12">
         <div className="flex items-center gap-3 mb-4">
             <div className="h-[1px] w-8 bg-blue-500"></div>
@@ -57,7 +56,7 @@ export default async function ReglagesPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* COLONNE GAUCHE : FORMULAIRE PRINCIPAL */}
+        
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white/3 border border-white/5 p-8 md:p-10 rounded-[2.5rem] backdrop-blur-md relative overflow-hidden">
             <div className="absolute top-0 right-0 p-8 opacity-5">
@@ -66,7 +65,7 @@ export default async function ReglagesPage() {
 
             <form className="relative z-10 space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* NOM */}
+                
                 <div className="space-y-3">
                   <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Nom de la marque</label>
                   <input 
@@ -76,7 +75,7 @@ export default async function ReglagesPage() {
                   />
                 </div>
 
-                {/* SLUG / URL */}
+                
                 <div className="space-y-3">
                   <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Lien personnalisé</label>
                   <div className="flex items-center bg-white/5 border border-white/10 rounded-2xl p-5 group focus-within:border-blue-500/50 transition-all">
@@ -90,18 +89,19 @@ export default async function ReglagesPage() {
                 </div>
               </div>
 
-              {/* DESCRIPTION (Optionnel selon ton schéma) */}
+             
               <div className="space-y-3">
                   <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Bio de la boutique</label>
                   <textarea 
                     placeholder="Décrivez votre univers en quelques mots..."
                     rows={4}
+                    defaultValue={boutique.activite || ""}
                     className="w-full bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-blue-500/50 transition-all text-sm font-bold text-white resize-none"
                   ></textarea>
               </div>
 
               <div className="pt-4">
-                <button className="bg-blue-600 hover:bg-blue-500 text-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all hover:scale-105 shadow-2xl shadow-blue-500/20 active:scale-95">
+                <button type="button" className="bg-blue-600 hover:bg-blue-500 text-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all hover:scale-105 shadow-2xl shadow-blue-500/20 active:scale-95">
                   Mettre à jour les infos
                 </button>
               </div>
@@ -109,7 +109,7 @@ export default async function ReglagesPage() {
           </div>
         </div>
 
-        {/* COLONNE DROITE : INFOS & STATUT */}
+        
         <div className="space-y-6">
             <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-8 rounded-[2.5rem] shadow-2xl shadow-blue-500/10 text-white">
                 <ShieldCheck className="mb-4 opacity-80" size={24} />
@@ -132,7 +132,7 @@ export default async function ReglagesPage() {
                     </div>
                     <div className="flex justify-between items-center p-4 bg-white/2 rounded-xl border border-white/5 opacity-50">
                         <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Couleurs</span>
-                        <Palette size={14} />
+                        <Palette size={14} className="text-gray-600" />
                     </div>
                 </div>
             </div>

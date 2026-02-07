@@ -7,7 +7,8 @@ import {
   Package, 
   TrendingUp, 
   PlusCircle, 
-  Settings 
+  Settings,
+  LogOut 
 } from "lucide-react";
 
 export default async function AdminDashboard() {
@@ -15,6 +16,14 @@ export default async function AdminDashboard() {
     const userId = cookieStore.get("userId")?.value;
 
     if (!userId) redirect("/login");
+
+    
+    async function handleLogout() {
+        "use server";
+        const cookieStore = await cookies();
+        cookieStore.delete("userId"); 
+        redirect("/login"); 
+    }
 
     const user = await prisma.utilisateur.findUnique({
         where: { id: parseInt(userId) },
@@ -33,14 +42,12 @@ export default async function AdminDashboard() {
 
     if (!boutique) redirect("/admin/setup");
 
-    // --- LOGIQUE D'ACCORD GRAMMATICAL ---
     const totalProduits = boutique._count.produits;
     const motProduit = totalProduits > 1 ? "produits" : "produit";
     const motEnregistre = totalProduits > 1 ? "enregistrés" : "enregistré";
 
     return (
         <div className="min-h-screen bg-[#020617] text-white p-8">
-            {/* Header */}
             <div className="max-w-7xl mx-auto flex justify-between items-center mb-10">
                 <div>
                     <h1 className="text-2xl font-black uppercase italic tracking-tighter">
@@ -51,16 +58,28 @@ export default async function AdminDashboard() {
                     </p>
                 </div>
                 
-                <Link 
-                    href="/admin/produits/nouveau"
-                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl font-bold transition-all text-sm uppercase tracking-widest shadow-lg shadow-blue-500/20"
-                >
-                    <PlusCircle size={18} />
-                    Ajouter un produit
-                </Link>
+                <div className="flex items-center gap-4">
+                    
+                    <form action={handleLogout}>
+                        <button 
+                            type="submit"
+                            className="flex items-center gap-2 bg-gray-900 border border-gray-800 hover:bg-red-500/10 hover:border-red-500/50 text-gray-400 hover:text-red-500 px-5 py-3 rounded-2xl font-bold transition-all text-sm uppercase tracking-widest"
+                        >
+                            <LogOut size={18} />
+                            Quitter
+                        </button>
+                    </form>
+
+                    <Link 
+                        href="/admin/produits/nouveau"
+                        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl font-bold transition-all text-sm uppercase tracking-widest shadow-lg shadow-blue-500/20"
+                    >
+                        <PlusCircle size={18} />
+                        Ajouter un produit
+                    </Link>
+                </div>
             </div>
 
-            {/* Grid de Statistiques */}
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                 <StatCard 
                     title="Ventes Totales" 
@@ -82,13 +101,11 @@ export default async function AdminDashboard() {
                 />
             </div>
 
-            {/* Section Actions Rapides */}
             <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="bg-gray-900/50 border border-gray-800 p-8 rounded-[2rem] backdrop-blur-xl hover:border-blue-500/30 transition-colors">
                     <h2 className="font-black uppercase italic mb-6 flex items-center gap-2 text-sm tracking-widest">
                         <Package size={20} className="text-blue-500" /> Gestion Stock
                     </h2>
-                    {/* ACCORD APPLIQUÉ ICI AUSSI */}
                     <p className="text-gray-500 text-sm mb-6">
                         Vous avez {totalProduits} {motProduit} {motEnregistre}.
                     </p>
@@ -110,6 +127,7 @@ export default async function AdminDashboard() {
         </div>
     );
 }
+
 
 function StatCard({ title, value, icon, desc }: { title: string, value: string, icon: React.ReactNode, desc: string }) {
     return (

@@ -4,7 +4,6 @@ import { useState } from "react";
 import { updateProfile } from "./actions";
 
 export default function SettingsForm({ user }: { user: any }) {
-    // On initialise l'état avec la valeur actuelle de la base de données
     const [activite, setActivite] = useState(user.maBoutique.activite || "");
     const [status, setStatus] = useState<{ type: 'success' | 'error', msg: string } | null>(null);
     const [loading, setLoading] = useState(false);
@@ -13,10 +12,8 @@ export default function SettingsForm({ user }: { user: any }) {
         setLoading(true);
         setStatus(null);
 
-        // Si "autre" est sélectionné, on utilise la valeur du champ texte supplémentaire
         const finalActivite = activite === "autre" ? formData.get("autreActivite") : activite;
         
-        // On met à jour manuellement la valeur dans le formData avant l'envoi
         formData.set("activite", finalActivite as string);
 
         const result = await updateProfile(formData, user.id.toString());
@@ -42,7 +39,7 @@ export default function SettingsForm({ user }: { user: any }) {
             )}
 
             <form action={clientAction} className="space-y-6">
-                {/* Nom du propriétaire */}
+                
                 <div>
                     <label className="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">
                         Nom complet (Propriétaire)
@@ -56,7 +53,7 @@ export default function SettingsForm({ user }: { user: any }) {
                     />
                 </div>
 
-                {/* Nom de la boutique */}
+                
                 <div>
                     <label className="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">
                         Nom de la boutique
@@ -70,7 +67,7 @@ export default function SettingsForm({ user }: { user: any }) {
                     />
                 </div>
 
-                {/* Type d'activité (Menu déroulant) */}
+               
                 <div className="space-y-2">
                     <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] ml-1">
                         Type d'activité
@@ -97,7 +94,7 @@ export default function SettingsForm({ user }: { user: any }) {
                     </div>
                 </div>
 
-                {/* Champ supplémentaire pour "Autre" */}
+                
                 {activite === "autre" && (
                     <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
                         <label className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] ml-1">

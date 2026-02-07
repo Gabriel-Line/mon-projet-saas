@@ -1,16 +1,27 @@
 import { prisma } from "@/lib/prisma";
+import { cookies } from "next/headers"; 
 import { ShoppingBag, Search, Filter, ArrowUpRight, Clock, CheckCircle2 } from "lucide-react";
 
 export default async function CommandesPage() {
-  const BOUTIQUE_ID = 1;
+  
+  const cookieStore = await cookies();
+  const userId = cookieStore.get("userId")?.value;
 
-  // 1. Récupération des vraies commandes depuis la DB
-  const commandes = await prisma.commande.findMany({
-    where: { boutiqueId: BOUTIQUE_ID },
-    orderBy: { dateCommande: 'desc' },
+  
+  const boutique = await prisma.boutique.findFirst({
+    where: { proprietaireId: Number(userId) },
+    select: { id: true }
   });
 
-  // Si aucune commande n'existe, on affiche ton état "Vide"
+  
+  const commandes = boutique 
+    ? await prisma.commande.findMany({
+        where: { boutiqueId: boutique.id },
+        orderBy: { dateCommande: 'desc' },
+      })
+    : [];
+  // ---------------------------------------------
+
   if (commandes.length === 0) {
     return (
       <div className="h-full flex flex-col">
@@ -34,7 +45,6 @@ export default async function CommandesPage() {
     );
   }
 
-  // Si on a des commandes, on affiche la liste stylisée
   return (
     <div className="h-full flex flex-col space-y-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -42,8 +52,9 @@ export default async function CommandesPage() {
           <h1 className="text-4xl font-black uppercase italic tracking-tighter text-white">
             Gestion des <span className="text-blue-500">Ventes</span>
           </h1>
+          
           <p className="text-gray-500 text-[10px] font-bold uppercase tracking-[0.3em] mt-2">
-            {commandes.length} commandes enregistrées au total
+            {commandes.length} {commandes.length > 1 ? "commandes enregistrées" : "commande enregistrée"} au total
           </p>
         </div>
 
@@ -57,7 +68,6 @@ export default async function CommandesPage() {
         </div>
       </div>
 
-      {/* Tableau des ventes stylisé (Design Dark & Clean) */}
       <div className="bg-[#0a0f1d] border border-white/5 rounded-[2.5rem] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">

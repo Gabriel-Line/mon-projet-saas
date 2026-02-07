@@ -1,25 +1,44 @@
 "use client";
 
-import { useEffect, Suspense } from "react";
+import { useEffect, Suspense, useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { CheckCircle, Package, ArrowRight, Download, Share2 } from "lucide-react";
+import { CheckCircle, Package, ArrowRight, Download, Share2, Loader2 } from "lucide-react";
+import { confirmerLePaiementAction } from "@/actions/paiement.actions";
 
-// On utilise un composant interne pour pouvoir utiliser useSearchParams avec Suspense
 function SuccessContent() {
   const { clearCart } = useCart();
   const searchParams = useSearchParams();
-  const orderId = searchParams.get("id");
+  const orderIdStr = searchParams.get("id");
+  const [isValidating, setIsValidating] = useState(true);
 
-  // On vide le panier dès le montage du composant
   useEffect(() => {
-    clearCart();
-  }, [clearCart]);
+    async function validateOrder() {
+      if (orderIdStr) {
+        const id = parseInt(orderIdStr);
+        
+        await confirmerLePaiementAction(id, "carte");
+        clearCart();
+        setIsValidating(false);
+      }
+    }
+    validateOrder();
+  }, [orderIdStr, clearCart]);
+
+  if (isValidating) {
+    return (
+      <div className="flex flex-col items-center gap-4">
+        <Loader2 className="animate-spin text-blue-600" size={40} />
+        <p className="font-black uppercase tracking-widest text-xs text-gray-400">
+          Sécurisation de la transaction...
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-md w-full text-center">
-      {/* Animation de succès */}
+    <div className="max-w-md w-full text-center animate-in fade-in zoom-in duration-500">
       <div className="mb-8 flex justify-center">
         <div className="relative">
           <div className="absolute inset-0 bg-green-100 rounded-full animate-ping opacity-20"></div>
@@ -32,12 +51,11 @@ function SuccessContent() {
       </h1>
       
       <p className="text-gray-500 mb-8 leading-relaxed text-sm">
-        Votre commande <span className="font-bold text-black">#{orderId || "N/A"}</span> a été validée avec succès. 
+        Votre commande <span className="font-bold text-black">#{orderIdStr || "N/A"}</span> a été validée avec succès. 
         Un agent de la boutique vous contactera sous peu pour la livraison.
       </p>
 
       <div className="space-y-4">
-        {/* Action principale : Retour boutique */}
         <Link 
           href="/" 
           className="w-full flex items-center justify-center gap-2 bg-black text-white py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-gray-800 hover:scale-[1.02] active:scale-95 transition-all shadow-xl"
@@ -45,7 +63,6 @@ function SuccessContent() {
           Continuer mes achats <ArrowRight size={16} />
         </Link>
 
-        {/* Action secondaire : Partager ou Reçu */}
         <div className="grid grid-cols-2 gap-4">
             <button className="flex items-center justify-center gap-2 bg-gray-50 text-gray-500 py-4 rounded-2xl font-black uppercase tracking-widest text-[9px] hover:bg-gray-100 transition-all border border-gray-100">
                 <Download size={14} /> Facture
@@ -56,7 +73,6 @@ function SuccessContent() {
         </div>
       </div>
 
-      {/* Badge de statut logistique */}
       <div className="mt-12 p-6 bg-green-50 rounded-[2.5rem] border border-green-100 flex items-center gap-4 text-left">
         <div className="bg-green-500 text-white p-3 rounded-2xl shadow-lg shadow-green-200">
           <Package size={20} />
@@ -70,11 +86,10 @@ function SuccessContent() {
   );
 }
 
-// Page principale avec Suspense (obligatoire pour useSearchParams dans Next.js 13/14/15)
 export default function SuccessPage() {
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-6">
-      <Suspense fallback={<div className="font-black uppercase tracking-widest text-gray-300 animate-pulse">Chargement...</div>}>
+      <Suspense fallback={<div className="font-black uppercase tracking-widest text-gray-300 animate-pulse">Initialisation...</div>}>
         <SuccessContent />
       </Suspense>
     </div>

@@ -14,7 +14,11 @@ export default async function SettingsPage() {
         include: { maBoutique: true }
     });
 
+   
     if (!user?.maBoutique) redirect("/admin/setup");
+
+    
+    const userSerialise = JSON.parse(JSON.stringify(user));
 
     return (
         <div className="min-h-screen bg-[#020617] text-white p-8">
@@ -23,8 +27,8 @@ export default async function SettingsPage() {
                     Paramètres de <span className="text-blue-500">Profil</span>
                 </h1>
 
-                {/* On appelle le composant client en lui passant les données initiales */}
-                <SettingsForm user={user} />
+                
+                <SettingsForm user={userSerialise} />
             </div>
         </div>
     );

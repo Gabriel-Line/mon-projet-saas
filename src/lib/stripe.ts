@@ -2,7 +2,7 @@
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-01-27' as any, // Utilise la version la plus stable
+  apiVersion: '2025-01-27' as any, 
 });
 
 export async function createStripeSession(orderId: number, amount: number) {
@@ -16,7 +16,7 @@ export async function createStripeSession(orderId: number, amount: number) {
             name: `Commande #${orderId} sur Operix`,
             description: "Paiement sécurisé par carte",
           },
-          unit_amount: Math.round(amount * 100), // Stripe calcule en centimes
+          unit_amount: Math.round(amount * 100), 
         },
         quantity: 1,
       },

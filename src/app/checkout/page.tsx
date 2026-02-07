@@ -2,24 +2,29 @@
 
 import { useCart } from "@/context/CartContext";
 import { createOrderAction } from "@/actions/order.actions";
-import { CreditCard, Smartphone, MapPin, User, Phone, ArrowLeft } from "lucide-react";
+import { CreditCard, MapPin, User, Phone, ArrowLeft, Smartphone } from "lucide-react";
 import Link from "next/link";
 
 export default function CheckoutPage() {
-    const { cart, totalItems } = useCart();
+    const { cart } = useCart();
     
-    // Calcul du prix total
     const totalPrice = cart.reduce((acc, item) => acc + item.prix * item.quantite, 0);
+    const boutiqueId = cart.length > 0 ? (cart[0] as any).boutiqueId : null;
+    const itemsJSON = JSON.stringify(cart);
 
-    // On récupère l'ID de la boutique depuis le premier item du panier
-    const boutiqueId = (cart[0] as any)?.boutiqueId;
-    // Si le panier est vide
+    async function handleFormAction(formData: FormData) {
+        const result = await createOrderAction(formData);
+        if (result?.error) {
+            alert(result.error);
+        }
+    }
+
     if (cart.length === 0) {
         return (
-            <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6 text-center">
-                <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-gray-100">
-                    <h2 className="text-xl font-black uppercase italic mb-4">Votre panier est vide</h2>
-                    <Link href="/" className="text-blue-600 font-bold uppercase text-[10px] tracking-widest flex items-center justify-center gap-2">
+            <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center p-6 text-center">
+                <div className="bg-white/5 p-12 rounded-[3rem] border border-white/10 backdrop-blur-md max-w-md w-full">
+                    <h2 className="text-2xl font-black uppercase italic mb-6 text-white tracking-tighter">Votre panier est vide</h2>
+                    <Link href="/" className="bg-white text-black px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-3 hover:scale-105 transition-all">
                         <ArrowLeft size={14} /> Retour à la boutique
                     </Link>
                 </div>
@@ -27,50 +32,46 @@ export default function CheckoutPage() {
         );
     }
 
-    // Fonction de soumission qui fait le pont entre le client (cart) et le serveur (action)
-    const handleSubmit = async (formData: FormData) => {
-        try {
-            await createOrderAction(formData, cart, boutiqueId);
-        } catch (error) {
-            alert("Une erreur est survenue lors de la commande.");
-            console.error(error);
-        }
-    };
-
     return (
-        <div className="min-h-screen bg-gray-50 text-black p-6">
-            <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="min-h-screen bg-[#020617] text-white p-6 md:p-12 font-sans">
+            <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
                 
-                {/* Formulaire de livraison */}
-                <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-gray-100">
-                    <h1 className="text-3xl font-black uppercase italic tracking-tighter mb-8">
-                        Finaliser <span className="text-blue-600">la commande</span>
+                
+                <div className="bg-white/3 p-8 md:p-12 rounded-[3rem] border border-white/5 backdrop-blur-sm">
+                    <h1 className="text-4xl font-black uppercase italic tracking-tighter mb-10 leading-none">
+                        Finaliser <span className="text-blue-500">la commande</span>
                     </h1>
                     
-                    <form action={handleSubmit} className="space-y-6">
-                        <div className="space-y-4">
-                            <h2 className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-2 mb-4">
-                                <MapPin size={14} /> Informations de livraison
+                    <form action={handleFormAction} className="space-y-8">
+                        
+                        <input type="hidden" name="boutiqueId" value={boutiqueId || ""} />
+                        <input type="hidden" name="totalPrix" value={totalPrice} /> 
+                        <input type="hidden" name="items" value={itemsJSON} />
+
+                        
+                        <div className="space-y-5">
+                            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500 flex items-center gap-2 mb-6">
+                                <MapPin size={14} /> Informations de Livraison
                             </h2>
                             
-                            <div className="relative">
-                                <User className="absolute left-4 top-4 text-gray-400" size={18} />
+                            <div className="relative group">
+                                <User className="absolute left-5 top-5 text-gray-600 group-focus-within:text-blue-500 transition-colors" size={18} />
                                 <input 
                                     name="nomClient" 
                                     required 
                                     placeholder="Nom complet" 
-                                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-600 outline-none transition-all" 
+                                    className="w-full pl-14 pr-6 py-5 bg-white/5 border border-white/5 rounded-2xl focus:ring-2 focus:ring-blue-500/50 focus:bg-white/10 outline-none transition-all text-sm font-bold" 
                                 />
                             </div>
 
-                            <div className="relative">
-                                <Phone className="absolute left-4 top-4 text-gray-400" size={18} />
+                            <div className="relative group">
+                                <Phone className="absolute left-5 top-5 text-gray-600 group-focus-within:text-blue-500 transition-colors" size={18} />
                                 <input 
                                     name="telephone" 
                                     type="tel" 
                                     required 
-                                    placeholder="Téléphone (MonCash/NatCash)" 
-                                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-600 outline-none transition-all" 
+                                    placeholder="Téléphone (WhatsApp / MonCash)" 
+                                    className="w-full pl-14 pr-6 py-5 bg-white/5 border border-white/5 rounded-2xl focus:ring-2 focus:ring-blue-500/50 focus:bg-white/10 outline-none transition-all text-sm font-bold" 
                                 />
                             </div>
 
@@ -79,85 +80,88 @@ export default function CheckoutPage() {
                                 required 
                                 placeholder="Adresse complète de livraison" 
                                 rows={3} 
-                                className="w-full p-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-600 outline-none resize-none transition-all"
+                                className="w-full p-6 bg-white/5 border border-white/5 rounded-2xl focus:ring-2 focus:ring-blue-500/50 focus:bg-white/10 outline-none transition-all text-sm font-bold resize-none"
                             ></textarea>
                         </div>
 
-                        <div className="space-y-4 pt-4">
-                            <h2 className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-2 mb-4">
-                                <CreditCard size={14} /> Méthode de paiement
+                        
+                        <div className="space-y-5">
+                            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500 flex items-center gap-2 mb-6">
+                                <CreditCard size={14} /> Méthode de Paiement
                             </h2>
                             
-                            <div className="grid grid-cols-1 gap-3">
-                                {/* Option MonCash */}
-                                <label className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl cursor-pointer hover:bg-blue-50 transition-all border-2 border-transparent has-[:checked]:border-blue-600 group">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-[#df1f26] rounded-full flex items-center justify-center text-white font-bold text-[10px]">MC</div>
-                                        <span className="font-bold text-sm">MonCash</span>
+                            <div className="grid grid-cols-1 gap-4">
+                                {/* MONCASH */}
+                                <label className="flex items-center justify-between p-5 bg-white/5 border border-white/5 rounded-2xl cursor-pointer hover:bg-white/10 transition-all border-2 border-transparent has-[:checked]:border-blue-500 group relative overflow-hidden">
+                                    <div className="flex items-center gap-4 z-10">
+                                        <div className="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center text-white font-black italic text-sm shadow-lg shadow-red-600/20">M</div>
+                                        <span className="font-black uppercase text-xs tracking-widest">MonCash</span>
                                     </div>
-                                    <input type="radio" name="methodePaiement" value="moncash" defaultChecked className="w-5 h-5 accent-blue-600" />
+                                    <input type="radio" name="methodePaiement" value="moncash" defaultChecked className="w-5 h-5 accent-blue-500 z-10" />
                                 </label>
 
-                                {/* Option Natcash */}
-                                <label className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl cursor-pointer hover:bg-blue-50 transition-all border-2 border-transparent has-[:checked]:border-blue-600 group">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-[#e30613] rounded-full flex items-center justify-center text-white font-bold text-[10px]">NC</div>
-                                        <span className="font-bold text-sm">NatCash</span>
+                                {/* NATCASH */}
+                                <label className="flex items-center justify-between p-5 bg-white/5 border border-white/5 rounded-2xl cursor-pointer hover:bg-white/10 transition-all border-2 border-transparent has-[:checked]:border-blue-500 group relative overflow-hidden">
+                                    <div className="flex items-center gap-4 z-10">
+                                        <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white font-black italic text-sm shadow-lg shadow-orange-500/20">N</div>
+                                        <span className="font-black uppercase text-xs tracking-widest">NatCash</span>
                                     </div>
-                                    <input type="radio" name="methodePaiement" value="natcash" className="w-5 h-5 accent-blue-600" />
+                                    <input type="radio" name="methodePaiement" value="natcash" className="w-5 h-5 accent-blue-500 z-10" />
                                 </label>
 
-                                {/* Option Carte */}
-                                <label className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl cursor-pointer hover:bg-blue-50 transition-all border-2 border-transparent has-[:checked]:border-blue-600 group">
-                                    <div className="flex items-center gap-3 text-gray-500 group-has-[:checked]:text-black">
-                                        <CreditCard size={24} />
-                                        <span className="font-bold text-sm">Carte de Crédit / Débit</span>
+                                {/* CARTE */}
+                                <label className="flex items-center justify-between p-5 bg-white/5 border border-white/5 rounded-2xl cursor-pointer hover:bg-white/10 transition-all border-2 border-transparent has-[:checked]:border-blue-500 group relative overflow-hidden">
+                                    <div className="flex items-center gap-4 z-10">
+                                        <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-600/20">
+                                            <CreditCard size={18} />
+                                        </div>
+                                        <span className="font-black uppercase text-xs tracking-widest">Carte Bancaire</span>
                                     </div>
-                                    <input type="radio" name="methodePaiement" value="carte_credit" className="w-5 h-5 accent-blue-600" />
+                                    <input type="radio" name="methodePaiement" value="carte" className="w-5 h-5 accent-blue-500 z-10" />
                                 </label>
                             </div>
                         </div>
 
-                        <button 
-                            type="submit" 
-                            className="w-full bg-blue-600 text-white py-6 rounded-[2rem] font-black uppercase tracking-widest text-xs shadow-xl shadow-blue-200 hover:bg-blue-700 hover:scale-[1.02] active:scale-95 transition-all mt-6"
-                        >
-                            Payer {totalPrice.toLocaleString()} HTG
+                        <button type="submit" className="w-full bg-blue-600 text-white py-6 rounded-[2rem] font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl shadow-blue-500/20 hover:bg-blue-500 hover:scale-[1.02] active:scale-95 transition-all mt-8">
+                            Confirmer et Payer {totalPrice.toLocaleString()} HTG
                         </button>
                     </form>
                 </div>
 
-                {/* Récapitulatif du panier (Côté droit) */}
-                <div className="hidden lg:block space-y-6">
-                    <div className="bg-black text-white p-10 rounded-[2.5rem] shadow-2xl">
-                        <h2 className="text-xl font-black uppercase italic mb-6">Votre panier</h2>
+               
+                <div className="hidden lg:block">
+                    <div className="bg-white/3 border border-white/5 p-12 rounded-[3rem] sticky top-12 backdrop-blur-md">
+                        <h2 className="text-2xl font-black uppercase italic mb-10 tracking-tighter">Votre <span className="text-blue-500">Sélection</span></h2>
                         
-                        <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                        <div className="space-y-6 max-h-[450px] overflow-y-auto pr-4 mb-10 custom-scrollbar">
                             {cart.map((item) => (
-                                <div key={item.id} className="flex justify-between items-center border-b border-white/10 pb-4">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-blue-500 font-black text-[10px]">
-                                            {item.quantite}x
-                                        </div>
-                                        <span className="font-bold text-sm tracking-tight">{item.nom}</span>
+                                <div key={item.id} className="flex justify-between items-center border-b border-white/5 pb-6">
+                                    <div className="flex flex-col">
+                                        <span className="text-[10px] font-black uppercase text-blue-500 tracking-widest mb-1">{item.quantite}x Quantité</span>
+                                        <span className="text-sm font-bold uppercase tracking-tight text-gray-200">{item.nom}</span>
                                     </div>
-                                    <span className="font-mono text-sm text-gray-400">
-                                        {(item.prix * item.quantite).toLocaleString()}
+                                    <span className="font-black text-lg italic italic tracking-tighter text-white">
+                                        {(item.prix * item.quantite).toLocaleString()} <small className="text-[8px] not-italic text-gray-500">HTG</small>
                                     </span>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="mt-8 pt-6 border-t border-white/20 flex justify-between items-end">
-                            <div className="flex flex-col">
-                                <span className="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] mb-1">Total à payer</span>
-                                <span className="text-3xl font-black text-blue-500">
-                                    {totalPrice.toLocaleString()} <small className="text-xs ml-1">HTG</small>
+                        <div className="pt-8 border-t border-white/10">
+                            <span className="text-gray-600 text-[10px] font-black uppercase tracking-[0.4em] block mb-2">Total net à payer</span>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-5xl font-black text-white italic tracking-tighter">
+                                    {totalPrice.toLocaleString()}
                                 </span>
+                                <span className="text-sm font-black uppercase text-blue-500">HTG</span>
                             </div>
-                            <div className="text-[10px] text-gray-600 font-bold uppercase tracking-widest">
-                                {totalItems} {totalItems > 1 ? 'articles' : 'article'}
-                            </div>
+                        </div>
+
+                        <div className="mt-10 p-6 bg-blue-500/5 rounded-3xl border border-blue-500/10 flex items-center gap-4">
+                            <Smartphone className="text-blue-500" size={24} />
+                            <p className="text-[9px] font-bold uppercase tracking-widest leading-relaxed text-blue-200/60">
+                                Une notification de confirmation vous sera envoyée après validation.
+                            </p>
                         </div>
                     </div>
                 </div>

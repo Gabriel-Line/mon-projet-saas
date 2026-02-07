@@ -8,7 +8,7 @@ export default function ErrorPaymentPage() {
   return (
     <div className="min-h-screen bg-[#020617] flex items-center justify-center p-6 text-white">
       <div className="max-w-md w-full text-center">
-        {/* Icone d'alerte */}
+        
         <div className="mb-8 flex justify-center">
           <div className="w-20 h-20 bg-red-500/10 border border-red-500/20 rounded-[2rem] flex items-center justify-center shadow-2xl">
             <AlertCircle size={40} className="text-red-500" />
@@ -24,7 +24,7 @@ export default function ErrorPaymentPage() {
         </p>
 
         <div className="space-y-4">
-          {/* Réessayer */}
+          
           <button 
             onClick={() => window.history.back()}
             className="w-full flex items-center justify-center gap-2 bg-white text-black py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-gray-200 transition-all shadow-xl"
@@ -32,7 +32,7 @@ export default function ErrorPaymentPage() {
             <RefreshCw size={16} /> Réessayer le paiement
           </button>
 
-          {/* Support */}
+          
           <Link 
             href="https://wa.me/votre_numero" 
             className="w-full flex items-center justify-center gap-2 bg-green-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-green-700 transition-all"

@@ -1,8 +1,8 @@
 
-const NATCASH_URL = "https://api.natcash.com/v1/payment"; // URL à adapter selon ton prestataire
+const NATCASH_URL = "https://api.natcash.com/v1/payment"; 
 
 export async function generateNatCashPayment(orderId: number, amount: number) {
-  // Les APIs NatCash demandent souvent une signature numérique (HMAC)
+  
   const res = await fetch(NATCASH_URL, {
     method: "POST",
     headers: {

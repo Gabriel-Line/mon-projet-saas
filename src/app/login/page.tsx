@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { loginAction } from '@/actions/auth.actions';
+import { ArrowLeft } from 'lucide-react'; 
 
 export default async function LoginPage({ 
     searchParams 
@@ -11,11 +12,23 @@ export default async function LoginPage({
 
     return (
         <div className="min-h-screen bg-[#020617] flex items-center justify-center p-6 relative overflow-hidden">
-            {/* Effets d'ambiance */}
+            
             <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/10 blur-[120px] rounded-full"></div>
             <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/10 blur-[120px] rounded-full"></div>
 
             <div className="relative z-10 w-full max-w-md">
+                
+                
+                <Link 
+                    href="/" 
+                    className="group flex items-center gap-2 mb-6 text-gray-500 hover:text-white transition-all w-fit"
+                >
+                    <div className="p-2 rounded-xl bg-gray-900/50 border border-gray-800 group-hover:border-blue-500/50 group-hover:bg-blue-500/10 transition-all">
+                        <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">Retour</span>
+                </Link>
+
                 <div className="bg-gray-900/40 backdrop-blur-3xl p-10 rounded-[2.5rem] border border-gray-800 shadow-2xl">
                     
                     <div className="text-center mb-10">
@@ -34,7 +47,7 @@ export default async function LoginPage({
                     )}
 
                     <form action={loginAction} className="space-y-6" autoComplete="off">
-                        {/* EMAIL */}
+                        
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] ml-1">
                                 Adresse Email
@@ -48,7 +61,7 @@ export default async function LoginPage({
                             />
                         </div>
 
-                        {/* MOT DE PASSE + OUBLIÉ */}
+                       
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] ml-1">
                                 Mot de passe
@@ -61,7 +74,7 @@ export default async function LoginPage({
                                 placeholder="••••••••" 
                             />
                             
-                            {/* Bouton Oublié placé juste ici, en dessous de l'input */}
+                            
                             <div className="flex justify-end pr-1">
                                 <Link 
                                     href="/forgot-password" 
@@ -72,7 +85,7 @@ export default async function LoginPage({
                             </div>
                         </div>
 
-                        {/* SUBMIT */}
+                        
                         <button 
                             type="submit" 
                             className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black shadow-xl shadow-blue-500/20 hover:bg-blue-500 hover:scale-[1.02] active:scale-95 transition-all mt-4 uppercase tracking-widest text-xs"

@@ -4,9 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-/**
- * Mise à jour d'un produit
- */
+
 export async function updateProduit(formData: FormData) {
     const id = parseInt(formData.get("id") as string);
     const nom = formData.get("nom") as string;
@@ -21,7 +19,7 @@ export async function updateProduit(formData: FormData) {
             where: { id },
             data: {
                 nom,
-                prix, // Prisma gère le string vers Decimal pour MySQL
+                prix, 
                 stock,
                 description,
             },
@@ -32,13 +30,10 @@ export async function updateProduit(formData: FormData) {
     }
 
     revalidatePath("/admin/produits");
-    // Redirection avec paramètre de succès
     redirect("/admin/produits?success=true");
 }
 
-/**
- * Suppression d'un produit
- */
+
 export async function deleteProduit(id: number) {
     try {
         await prisma.produit.delete({

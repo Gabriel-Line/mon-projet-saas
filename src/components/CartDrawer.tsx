@@ -14,13 +14,13 @@ export default function CartDrawer({ isOpen, onClose }: { isOpen: boolean, onClo
 
   return (
     <div className="fixed inset-0 z-[100] flex justify-end">
-      {/* Overlay sombre */}
+      
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
-      {/* Panneau latéral */}
+      
       <div className="relative w-full max-w-md bg-[#020617] border-l border-white/10 h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
         
-        {/* Header */}
+        
         <div className="p-6 border-b border-white/5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <ShoppingBag className="text-blue-500" size={24} />
@@ -31,7 +31,7 @@ export default function CartDrawer({ isOpen, onClose }: { isOpen: boolean, onClo
           </button>
         </div>
 
-        {/* Liste des articles */}
+        
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {items.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center opacity-40">
@@ -65,7 +65,7 @@ export default function CartDrawer({ isOpen, onClose }: { isOpen: boolean, onClo
           )}
         </div>
 
-        {/* Footer avec Total */}
+        
         {items.length > 0 && (
           <div className="p-8 border-t border-white/5 bg-black/40 space-y-6">
             <div className="flex justify-between items-end">
