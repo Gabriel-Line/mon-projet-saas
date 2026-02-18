@@ -1,4 +1,3 @@
-
 "use client";
 import { useCart } from "@/store/useCart";
 import { X, ShoppingBag, Plus, Minus, Trash2 } from "lucide-react";
@@ -17,7 +16,6 @@ export default function CartDrawer({ isOpen, onClose }: { isOpen: boolean, onClo
       
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
-      
       <div className="relative w-full max-w-md bg-[#020617] border-l border-white/10 h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
         
         
@@ -47,7 +45,8 @@ export default function CartDrawer({ isOpen, onClose }: { isOpen: boolean, onClo
                 
                 <div className="flex-1">
                   <h3 className="font-black uppercase italic text-sm mb-1 truncate w-40">{item.nom}</h3>
-                  <p className="text-blue-500 font-bold text-sm mb-3">{item.prix.toLocaleString()} HTG</p>
+                  
+                  <p className="text-blue-500 font-bold text-sm mb-3">${item.prix.toLocaleString()} <span className="text-[10px]">USD</span></p>
                   
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3 bg-black/40 rounded-xl p-1 border border-white/10">
@@ -70,7 +69,8 @@ export default function CartDrawer({ isOpen, onClose }: { isOpen: boolean, onClo
           <div className="p-8 border-t border-white/5 bg-black/40 space-y-6">
             <div className="flex justify-between items-end">
               <p className="text-gray-500 text-xs font-black uppercase tracking-widest">Total estimé</p>
-              <p className="text-3xl font-black italic text-white">{total().toLocaleString()} HTG</p>
+              
+              <p className="text-3xl font-black italic text-white">${total().toLocaleString()} <span className="text-sm">USD</span></p>
             </div>
             
             <button className="w-full bg-blue-600 hover:bg-blue-500 text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-xs transition-all active:scale-95 shadow-xl shadow-blue-600/20">

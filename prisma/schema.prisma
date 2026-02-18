@@ -8,12 +8,12 @@ datasource db {
 }
 
 model Boutique {
-  id           Int      @id @default(autoincrement())
-  nom          String
-  sousDomaine  String   @unique
-  activite     String
-  dateCreation DateTime @default(now())
-  solde       Decimal    @default(0.00) @db.Decimal(10, 2)
+  id             Int         @id @default(autoincrement())
+  nom            String
+  sousDomaine    String      @unique
+  activite       String
+  dateCreation   DateTime    @default(now())
+  solde          Decimal     @default(0.00) @db.Decimal(10, 2)
   proprietaire   Utilisateur @relation("ProprietaireBoutique", fields: [proprietaireId], references: [id])
   proprietaireId Int         @unique
 
@@ -29,10 +29,10 @@ model Utilisateur {
   nom_complet       String
   email             String    @unique
   mot_de_passe      String
-  role              String    @default("acheteur") 
+  role              String    @default("acheteur")
   resetToken        String?   @unique
   resetTokenExpiry  DateTime?
-  
+
   commandes  Commande[]
   maBoutique Boutique?  @relation("ProprietaireBoutique")
 
@@ -45,7 +45,8 @@ model Produit {
   description  String?  @db.Text
   prix         Decimal  @db.Decimal(10, 2)
   stock        Int      @default(0)
-  image_url    String?
+  // MODIFICATION ICI : Ajout de @db.Text pour accepter les URLs longues
+  image_url    String?  @db.Text
   dateCreation DateTime @default(now())
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -62,17 +63,17 @@ model Commande {
   totalPrix       Decimal  @db.Decimal(10, 2)
   fraisPlateforme Decimal  @db.Decimal(10, 2)
   methodePaiement String?
-  statutCommande  String   @default("en_attente") 
+  statutCommande  String   @default("en_attente")
   dateCommande    DateTime @default(now())
-  nomClient String
-  telephone String
-  adresse   String @db.Text
+  nomClient       String
+  telephone       String
+  adresse         String   @db.Text
 
   items Json
 
   boutiqueId    Int
-  utilisateurId Int? 
-  
+  utilisateurId Int?
+
   boutique    Boutique     @relation(fields: [boutiqueId], references: [id])
   utilisateur Utilisateur? @relation(fields: [utilisateurId], references: [id])
   paiements   Paiement[]
@@ -84,8 +85,8 @@ model Commande {
 
 model Paiement {
   id              Int      @id @default(autoincrement())
-  methodePaiement String   
-  statutPaiement  String   @default("en_attente") 
+  methodePaiement String
+  statutPaiement  String   @default("en_attente")
   montant         Decimal  @db.Decimal(10, 2)
   transactionId   String?  @unique
   datePaiement    DateTime @default(now())

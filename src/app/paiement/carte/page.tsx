@@ -12,7 +12,6 @@ export default async function CardPaymentPage({
     const { orderId } = await searchParams;
     const id = parseInt(orderId);
 
-    
     const commande = await prisma.commande.findUnique({ 
         where: { id } 
     });
@@ -24,11 +23,11 @@ export default async function CardPaymentPage({
     return (
         <div className="min-h-screen bg-[#020617] flex items-center justify-center p-6 text-white relative overflow-hidden">
             
+            
             <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/10 blur-[120px] rounded-full"></div>
 
             <div className="relative z-10 w-full max-w-md">
                 
-              
                 <Link href="/checkout" className="flex items-center gap-2 mb-6 text-gray-500 hover:text-white transition-all text-[10px] font-black uppercase tracking-widest">
                     <ArrowLeft size={14} /> Modifier le paiement
                 </Link>
@@ -45,16 +44,16 @@ export default async function CardPaymentPage({
 
                     <div className="space-y-6">
                         
+                        
                         <div className="bg-gray-950/50 border border-gray-800 rounded-2xl p-6 text-center">
                             <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">
                                 Montant à régler
                             </p>
                             <p className="text-4xl font-black text-white italic">
-                                {amount.toLocaleString()} <span className="text-sm not-italic text-blue-500">HTG</span>
+                                ${amount.toLocaleString()} <span className="text-sm not-italic text-blue-500">USD</span>
                             </p>
                         </div>
 
-                        
                         <div className="flex items-start gap-3 p-4 bg-blue-500/5 border border-blue-500/10 rounded-xl">
                             <ShieldCheck size={18} className="text-blue-500 shrink-0" />
                             <p className="text-[10px] text-gray-400 leading-relaxed font-medium">
@@ -62,7 +61,6 @@ export default async function CardPaymentPage({
                             </p>
                         </div>
 
-                        
                         <form action={async () => {
                             "use server";
                             await processCardPaymentAction(id, amount);

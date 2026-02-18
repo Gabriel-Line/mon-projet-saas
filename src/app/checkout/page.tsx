@@ -6,7 +6,7 @@ import { CreditCard, MapPin, User, Phone, ArrowLeft, Smartphone } from "lucide-r
 import Link from "next/link";
 
 export default function CheckoutPage() {
-    const { cart } = useCart();
+    const { cart, formatPrice } = useCart();
     
     const totalPrice = cart.reduce((acc, item) => acc + item.prix * item.quantite, 0);
     const boutiqueId = cart.length > 0 ? (cart[0] as any).boutiqueId : null;
@@ -84,14 +84,13 @@ export default function CheckoutPage() {
                             ></textarea>
                         </div>
 
-                        
+                       
                         <div className="space-y-5">
                             <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500 flex items-center gap-2 mb-6">
                                 <CreditCard size={14} /> Méthode de Paiement
                             </h2>
                             
                             <div className="grid grid-cols-1 gap-4">
-                                {/* MONCASH */}
                                 <label className="flex items-center justify-between p-5 bg-white/5 border border-white/5 rounded-2xl cursor-pointer hover:bg-white/10 transition-all border-2 border-transparent has-[:checked]:border-blue-500 group relative overflow-hidden">
                                     <div className="flex items-center gap-4 z-10">
                                         <div className="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center text-white font-black italic text-sm shadow-lg shadow-red-600/20">M</div>
@@ -100,7 +99,6 @@ export default function CheckoutPage() {
                                     <input type="radio" name="methodePaiement" value="moncash" defaultChecked className="w-5 h-5 accent-blue-500 z-10" />
                                 </label>
 
-                                {/* NATCASH */}
                                 <label className="flex items-center justify-between p-5 bg-white/5 border border-white/5 rounded-2xl cursor-pointer hover:bg-white/10 transition-all border-2 border-transparent has-[:checked]:border-blue-500 group relative overflow-hidden">
                                     <div className="flex items-center gap-4 z-10">
                                         <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white font-black italic text-sm shadow-lg shadow-orange-500/20">N</div>
@@ -109,7 +107,6 @@ export default function CheckoutPage() {
                                     <input type="radio" name="methodePaiement" value="natcash" className="w-5 h-5 accent-blue-500 z-10" />
                                 </label>
 
-                                {/* CARTE */}
                                 <label className="flex items-center justify-between p-5 bg-white/5 border border-white/5 rounded-2xl cursor-pointer hover:bg-white/10 transition-all border-2 border-transparent has-[:checked]:border-blue-500 group relative overflow-hidden">
                                     <div className="flex items-center gap-4 z-10">
                                         <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-600/20">
@@ -123,12 +120,12 @@ export default function CheckoutPage() {
                         </div>
 
                         <button type="submit" className="w-full bg-blue-600 text-white py-6 rounded-[2rem] font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl shadow-blue-500/20 hover:bg-blue-500 hover:scale-[1.02] active:scale-95 transition-all mt-8">
-                            Confirmer et Payer {totalPrice.toLocaleString()} HTG
+                            Confirmer et Payer {formatPrice(totalPrice)}
                         </button>
                     </form>
                 </div>
 
-               
+                
                 <div className="hidden lg:block">
                     <div className="bg-white/3 border border-white/5 p-12 rounded-[3rem] sticky top-12 backdrop-blur-md">
                         <h2 className="text-2xl font-black uppercase italic mb-10 tracking-tighter">Votre <span className="text-blue-500">Sélection</span></h2>
@@ -140,8 +137,8 @@ export default function CheckoutPage() {
                                         <span className="text-[10px] font-black uppercase text-blue-500 tracking-widest mb-1">{item.quantite}x Quantité</span>
                                         <span className="text-sm font-bold uppercase tracking-tight text-gray-200">{item.nom}</span>
                                     </div>
-                                    <span className="font-black text-lg italic italic tracking-tighter text-white">
-                                        {(item.prix * item.quantite).toLocaleString()} <small className="text-[8px] not-italic text-gray-500">HTG</small>
+                                    <span className="font-black text-lg italic tracking-tighter text-white">
+                                        {formatPrice(item.prix * item.quantite)}
                                     </span>
                                 </div>
                             ))}
@@ -151,9 +148,8 @@ export default function CheckoutPage() {
                             <span className="text-gray-600 text-[10px] font-black uppercase tracking-[0.4em] block mb-2">Total net à payer</span>
                             <div className="flex items-baseline gap-2">
                                 <span className="text-5xl font-black text-white italic tracking-tighter">
-                                    {totalPrice.toLocaleString()}
+                                    {formatPrice(totalPrice)}
                                 </span>
-                                <span className="text-sm font-black uppercase text-blue-500">HTG</span>
                             </div>
                         </div>
 

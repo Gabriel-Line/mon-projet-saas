@@ -3,27 +3,27 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import Image from "next/image";
 import { Plus, Package, Edit, Trash2, ExternalLink } from "lucide-react";
+import { deleteProductAction } from "@/actions/product.actions"; 
 
 export default async function ProduitsDashboardPage() {
   
   const cookieStore = await cookies();
   const userId = cookieStore.get("userId")?.value;
 
-  
   const boutique = await prisma.boutique.findFirst({
     where: { proprietaireId: Number(userId) },
   });
 
-  
   const produits = boutique 
     ? await prisma.produit.findMany({
         where: { boutiqueId: boutique.id },
         orderBy: { id: 'desc' }
       })
     : [];
- 
+
   return (
     <div className="min-h-screen bg-[#020617] text-white p-8">
+      
       
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
         <div>
@@ -44,6 +44,7 @@ export default async function ProduitsDashboardPage() {
         </Link>
       </div>
 
+      
       {produits.length === 0 ? (
         <div className="bg-gray-900/40 border-2 border-dashed border-gray-800 rounded-[3rem] py-32 text-center backdrop-blur-xl">
           <div className="bg-gray-800/50 w-20 h-20 rounded-3xl shadow-inner flex items-center justify-center mx-auto mb-6">
@@ -59,6 +60,7 @@ export default async function ProduitsDashboardPage() {
           {produits.map((produit) => (
             <div key={produit.id} className="bg-gray-900/40 border border-gray-800 rounded-[2.5rem] p-6 shadow-2xl hover:border-blue-500/50 transition-all group backdrop-blur-sm relative overflow-hidden">
               
+              
               <div className="relative h-56 w-full rounded-[2rem] overflow-hidden mb-6 bg-gray-950">
                 <Image 
                   src={produit.image_url || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop"} 
@@ -71,18 +73,21 @@ export default async function ProduitsDashboardPage() {
                 </div>
               </div>
 
+              
               <div className="mb-8 px-2">
                 <h3 className="text-xl font-black uppercase italic tracking-tighter truncate text-white group-hover:text-blue-400 transition-colors">
                   {produit.nom}
                 </h3>
                 <div className="mt-2">
                     <p className="text-white font-black text-3xl tracking-tighter">
-                      {Number(produit.prix).toLocaleString()} <span className="text-blue-500 text-xs uppercase ml-1 italic">HTG</span>
+                      ${Number(produit.prix).toLocaleString()} <span className="text-blue-500 text-xs uppercase ml-1 italic">USD</span>
                     </p>
                 </div>
               </div>
 
+              
               <div className="flex items-center gap-3 pt-6 border-t border-gray-800/50">
+                
                 <Link 
                   href={`/admin/produits/modifier/${produit.id}`}
                   className="flex-1 bg-gray-800/50 hover:bg-gray-700 text-gray-300 p-4 rounded-2xl transition-all flex justify-center items-center group/btn shadow-inner" 
@@ -91,9 +96,23 @@ export default async function ProduitsDashboardPage() {
                   <Edit size={18} className="group-hover/btn:rotate-12 transition-transform" />
                 </Link>
 
-                <button className="flex-1 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white p-4 rounded-2xl transition-all flex justify-center items-center group/btn" title="Supprimer">
-                  <Trash2 size={18} />
-                </button>
+                
+                <form 
+                  action={async () => {
+                    "use server";
+                    await deleteProductAction(produit.id);
+                  }}
+                  className="flex-1"
+                >
+                  <button 
+                    type="submit"
+                    className="w-full bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white p-4 rounded-2xl transition-all flex justify-center items-center group/btn" 
+                    title="Supprimer"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </form>
+                
                 
                 <Link 
                   href={`/produit/${produit.id}`}

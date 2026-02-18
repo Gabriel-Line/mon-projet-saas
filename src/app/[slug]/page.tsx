@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ShoppingBag, Star, Package, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import AddToCartBtn from "@/components/AddToCartBtn";
+import { formatPrice } from "@/lib/utils"; 
 
 export default async function BoutiquePage({ 
   params 
@@ -129,12 +130,12 @@ export default async function BoutiquePage({
                       <div className="mt-auto flex items-center justify-between gap-4">
                         <div>
                           <p className="text-[9px] font-black uppercase text-gray-600 tracking-widest mb-1">Prix unitaire</p>
+                          
                           <p className="text-2xl font-black text-blue-500 italic">
-                            {produitPourClient.prix.toLocaleString()} <span className="text-xs font-normal opacity-60">HTG</span>
+                            {formatPrice(produitPourClient.prix)}
                           </p>
                         </div>
 
-                        
                         <div className="h-14 w-14">
                             <AddToCartBtn produit={produitPourClient} />
                         </div>

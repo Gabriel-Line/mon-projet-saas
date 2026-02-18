@@ -7,20 +7,17 @@ export default async function CommandesPage() {
   const cookieStore = await cookies();
   const userId = cookieStore.get("userId")?.value;
 
-  
   const boutique = await prisma.boutique.findFirst({
     where: { proprietaireId: Number(userId) },
     select: { id: true }
   });
 
-  
   const commandes = boutique 
     ? await prisma.commande.findMany({
         where: { boutiqueId: boutique.id },
         orderBy: { dateCommande: 'desc' },
       })
     : [];
-  // ---------------------------------------------
 
   if (commandes.length === 0) {
     return (
@@ -95,8 +92,9 @@ export default async function CommandesPage() {
                     })}
                   </td>
                   <td className="p-6">
+                    
                     <p className="text-sm font-black text-white italic">
-                        {Number(order.totalPrix).toLocaleString()} <span className="text-[10px] text-blue-500">HTG</span>
+                        ${Number(order.totalPrix).toLocaleString()} <span className="text-[10px] text-blue-500">USD</span>
                     </p>
                   </td>
                   <td className="p-6">

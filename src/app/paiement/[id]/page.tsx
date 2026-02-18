@@ -65,8 +65,9 @@ export default async function PagePaiement({
                     <div className="flex justify-between items-start mb-8">
                         <div>
                             <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Total à régler</p>
+                            
                             <h2 className="text-4xl font-black text-white italic">
-                                {Number(commande.totalPrix).toLocaleString()} <span className="text-sm">HTG</span>
+                                ${Number(commande.totalPrix).toLocaleString()} <span className="text-sm">USD</span>
                             </h2>
                         </div>
                     </div>

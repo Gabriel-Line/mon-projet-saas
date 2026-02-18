@@ -97,7 +97,7 @@ export default async function ListeProduitsPage({
                                         </div>
                                     </td>
                                     <td className="p-6 font-mono text-sm text-blue-400 font-bold">
-                                        {Number(produit.prix).toLocaleString()} <span className="text-[10px] text-gray-500 font-normal">HTG</span>
+                                        {Number(produit.prix).toLocaleString()} <span className="text-[10px] text-gray-500 font-normal">USD</span>
                                     </td>
                                     <td className="p-6">
                                         <span className={`text-[10px] font-black uppercase px-3 py-1 rounded-full border ${

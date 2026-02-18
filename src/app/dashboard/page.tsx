@@ -65,7 +65,6 @@ export default async function DashboardPage() {
   }
 
   return (
-    
     <div className="min-h-screen bg-[#020617] text-white p-4 md:p-10 space-y-10 selection:bg-blue-500/30">
       
       
@@ -100,7 +99,10 @@ export default async function DashboardPage() {
           </div>
           <div>
             <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Ventes Brutes</p>
-            <p className="text-3xl font-black text-white mt-1 tracking-tighter">{totalBrut.toLocaleString()} <span className="text-xs text-emerald-500">HTG</span></p>
+            
+            <p className="text-3xl font-black text-white mt-1 tracking-tighter">
+              ${totalBrut.toLocaleString()} <span className="text-xs text-emerald-500 italic">USD</span>
+            </p>
           </div>
         </div>
 
@@ -122,7 +124,10 @@ export default async function DashboardPage() {
           </div>
           <div className="z-10">
             <p className="text-[10px] font-black uppercase text-blue-100 tracking-widest">Votre Revenu Net (95%)</p>
-            <p className="text-3xl font-black text-white mt-1 tracking-tighter">{revenuNetVendeur.toLocaleString()} HTG</p>
+            
+            <p className="text-3xl font-black text-white mt-1 tracking-tighter">
+              ${revenuNetVendeur.toLocaleString()} <span className="text-xs italic">USD</span>
+            </p>
             <p className="text-[9px] text-blue-200 mt-2 font-bold uppercase tracking-tighter">Frais de service déduits</p>
           </div>
           <Landmark size={150} className="absolute right-[-10%] bottom-[-20%] text-white/10 rotate-12 group-hover:scale-110 transition-transform duration-700" />
@@ -154,7 +159,10 @@ export default async function DashboardPage() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-black text-white text-lg tracking-tighter mb-1">{Number(cmd.totalPrix).toLocaleString()} <span className="text-[10px] text-blue-500">HTG</span></p>
+                  
+                  <p className="font-black text-white text-lg tracking-tighter mb-1">
+                    ${Number(cmd.totalPrix).toLocaleString()} <span className="text-[10px] text-blue-500">USD</span>
+                  </p>
                   <span className={`text-[8px] font-black uppercase px-3 py-1 rounded-full border ${
                     cmd.statutCommande === 'paye' 
                       ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' 

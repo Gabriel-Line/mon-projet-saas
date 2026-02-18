@@ -1,4 +1,3 @@
-
 import Link from 'next/link';
 import { Store, UserPlus, LogIn, ArrowLeft } from 'lucide-react';
 
@@ -44,8 +43,6 @@ export default function ChoicePage() {
                             Se connecter →
                         </div>
                     </Link>
-
-                   
                     <Link 
                         href="/register?intent=vendre" 
                         className="group relative p-8 bg-gray-900/40 backdrop-blur-3xl border border-gray-800 rounded-[2.5rem] hover:border-purple-500/50 transition-all duration-500"

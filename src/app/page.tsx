@@ -16,6 +16,9 @@ export default async function HomePage() {
     });
   }
 
+  
+  const isVendeurActif = !!user?.maBoutique;
+
   const shops = await prisma.boutique.findMany({
     select: { id: true, nom: true, sousDomaine: true },
     orderBy: { dateCreation: "desc" },
@@ -23,7 +26,7 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#020617] text-gray-100 overflow-x-hidden font-sans">
-
+      
       
       <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#020617]/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -34,12 +37,16 @@ export default async function HomePage() {
           <div className="flex items-center gap-6">
             <div className="hidden md:flex gap-8 text-[10px] font-black tracking-[0.2em] text-gray-400">
               <Link href="/" className="hover:text-white transition">ACCUEIL</Link>
-              <Link href="/marche" className="hover:text-white transition">BOUTIQUES</Link>
+              
+              
+              {!isVendeurActif && (
+                <Link href="/marche" className="hover:text-white transition">BOUTIQUES</Link>
+              )}
             </div>
 
             {userId ? (
               <div className="flex items-center gap-5">
-                <Link href={user?.maBoutique ? "/admin" : "/"} className="text-gray-400 hover:text-white transition">
+                <Link href={user?.maBoutique ? "/admin" : "/admin/setup"} className="text-gray-400 hover:text-white transition">
                   <User size={20} />
                 </Link>
                 <form action={logoutAction}>
@@ -52,7 +59,6 @@ export default async function HomePage() {
               <Link
                 href="/login"
                 className="p-2.5 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition text-blue-400"
-                title="Connexion"
               >
                 <LogIn size={20} />
               </Link>
@@ -84,15 +90,22 @@ export default async function HomePage() {
                 href={!userId ? "/choix" : (user?.maBoutique ? "/admin" : "/admin/setup")}
                 className="w-full sm:w-auto bg-white text-black px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-105 transition shadow-2xl shadow-white/10"
             >
-                Créer ma boutique
+                {user?.maBoutique ? "Gérer ma boutique" : "Créer ma boutique"}
             </Link>
             
-            <Link
-              href="/marche"
-              className="w-full sm:w-auto bg-white/5 border border-white/10 px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-white/10 transition backdrop-blur-sm"
-            >
-              Explorer le marché
-            </Link>
+            
+            {!isVendeurActif ? (
+              <Link
+                href="/marche"
+                className="w-full sm:w-auto bg-white/5 border border-white/10 px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-white/10 transition backdrop-blur-sm"
+              >
+                Explorer le marché
+              </Link>
+            ) : (
+              <div className="w-full sm:w-auto bg-white/5 border border-white/5 px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] text-gray-600 opacity-50 cursor-not-allowed italic">
+                Mode Vendeur Actif
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -112,15 +125,13 @@ export default async function HomePage() {
               <p className="text-gray-500 italic">Le marché se prépare... Revenez bientôt.</p>
             </div>
           ) : (
-            shops.map((shop) => (
-              <Link
-                key={shop.id}
-                
-                href={userId ? `/${shop.sousDomaine}` : "/login"} 
-                className="group"
-              >
-                <div className="bg-white/3 border border-white/5 p-10 rounded-[2.5rem] hover:border-blue-500/40 hover:-translate-y-3 transition-all duration-500">
-                  <div className="w-16 h-16 mb-8 rounded-2xl bg-linear-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-2xl font-black text-white shadow-xl shadow-blue-500/20 group-hover:scale-110 transition-transform">
+            shops.map((shop) => {
+             
+              const canVisit = !isVendeurActif; 
+
+              const CardContent = (
+                <div className={`bg-white/3 border border-white/5 p-10 rounded-[2.5rem] transition-all duration-500 ${canVisit ? 'hover:border-blue-500/40 hover:-translate-y-3 group cursor-pointer' : 'opacity-60 cursor-default'}`}>
+                  <div className={`w-16 h-16 mb-8 rounded-2xl bg-linear-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-2xl font-black text-white shadow-xl shadow-blue-500/20 ${canVisit ? 'group-hover:scale-110' : ''} transition-transform`}>
                     {shop.nom[0]}
                   </div>
 
@@ -129,12 +140,22 @@ export default async function HomePage() {
                     @{shop.sousDomaine}
                   </p>
 
-                  <div className="text-[10px] font-black uppercase tracking-widest text-gray-500 group-hover:text-white transition-colors">
-                    {userId ? "Visiter la boutique →" : "Se connecter pour visiter →"}
+                  <div className={`text-[10px] font-black uppercase tracking-widest transition-colors ${canVisit ? 'text-gray-500 group-hover:text-white' : 'text-gray-700'}`}>
+                    {canVisit ? "Visiter la boutique →" : "Consultation restreinte"}
                   </div>
                 </div>
-              </Link>
-            ))
+              );
+
+              return canVisit ? (
+                <Link key={shop.id} href={`/${shop.sousDomaine}`} className="group">
+                  {CardContent}
+                </Link>
+              ) : (
+                <div key={shop.id}>
+                  {CardContent}
+                </div>
+              );
+            })
           )}
         </div>
       </main>

@@ -83,7 +83,7 @@ export default async function AdminDashboard() {
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                 <StatCard 
                     title="Ventes Totales" 
-                    value="0 HTG" 
+                    value="0 USD" 
                     icon={<TrendingUp className="text-green-500" />} 
                     desc="Revenus générés"
                 />

@@ -30,7 +30,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </Link>
         </nav>
 
-        {/* Bas de Sidebar */}
+        
         <div className="pt-8 border-t border-white/5 space-y-4">
           <Link href="/dashboard/reglages" className="flex items-center gap-4 p-4 text-gray-500 hover:text-white rounded-[1.5rem] font-black uppercase italic text-[10px] tracking-widest transition-all">
             <Settings size={18} /> Réglages

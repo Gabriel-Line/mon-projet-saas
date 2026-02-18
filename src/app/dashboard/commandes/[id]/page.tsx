@@ -20,7 +20,6 @@ export default async function DetailCommandePage({ params }: { params: Promise<{
   const { id: idString } = await params;
   const id = parseInt(idString);
 
-  
   const cookieStore = await cookies();
   const userId = cookieStore.get("userId")?.value;
 
@@ -31,11 +30,9 @@ export default async function DetailCommandePage({ params }: { params: Promise<{
     }
   });
 
-  
   if (!commande || commande.boutique.proprietaireId !== Number(userId)) {
     notFound(); 
   }
- 
 
   const articles = commande.items ? JSON.parse(commande.items as string) : [];
 
@@ -102,7 +99,7 @@ export default async function DetailCommandePage({ params }: { params: Promise<{
                     </div>
                     <span className="font-bold text-sm uppercase tracking-tight">{item.nom}</span>
                   </div>
-                  <span className="font-black text-sm">{(item.prix * item.quantite).toLocaleString()} HTG</span>
+                  <span className="font-black text-sm">${(item.prix * item.quantite).toLocaleString()}</span>
                 </div>
               )) : (
                 <p className="text-gray-400 italic text-center py-4">Détails des articles non disponibles</p>
@@ -141,17 +138,17 @@ export default async function DetailCommandePage({ params }: { params: Promise<{
             <div className="space-y-4">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">Prix de vente</span>
-                <span className="font-black text-black">{montantTotal.toLocaleString()} HTG</span>
+                <span className="font-black text-black">${montantTotal.toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-sm text-orange-500">
                 <span className="font-bold uppercase tracking-widest text-[10px]">Frais plateforme</span>
-                <span className="font-black">-{commission.toLocaleString()} HTG</span>
+                <span className="font-black">-${commission.toLocaleString()}</span>
               </div>
               <div className="h-px bg-gray-100 my-4"></div>
               <div className="space-y-1 text-center">
                 <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">Net Vendeur</p>
                 <p className="text-4xl font-black text-blue-600 italic tracking-tighter">
-                   {netVendeur.toLocaleString()} <span className="text-xs uppercase not-italic">HTG</span>
+                   ${netVendeur.toLocaleString()}
                 </p>
               </div>
             </div>

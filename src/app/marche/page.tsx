@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 import Link from "next/link";
 import { ShoppingBag, ArrowLeft } from "lucide-react";
+import { formatPrice } from "@/lib/utils";
 
 export default async function MarchePage() {
   const produits = await prisma.produit.findMany({
@@ -29,7 +30,6 @@ export default async function MarchePage() {
           <h2 className="text-2xl md:text-4xl font-black italic uppercase tracking-[0.2em] bg-gradient-to-r from-blue-400 via-white to-blue-400 bg-clip-text text-transparent px-4">
             Découvrez toutes les pépites d'Operix
           </h2>
-          
           
           <div className="mt-6 flex justify-center items-center gap-4">
             <div className="h-[1px] w-12 md:w-24 bg-gradient-to-r from-transparent to-blue-500"></div>
@@ -77,8 +77,9 @@ export default async function MarchePage() {
                     </h3>
                     
                     <div className="mt-auto flex justify-between items-center">
+                      
                       <p className="text-xl font-black text-white">
-                        {produit.prix.toLocaleString()} <span className="text-[10px] text-blue-500 ml-1">HTG</span>
+                        {formatPrice(Number(produit.prix))}
                       </p>
                       
                       <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 border border-white/5">
